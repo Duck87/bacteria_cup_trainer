@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Тренажёр: бактерии в стакане</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 p-6">
+
+<div class="max-w-5xl mx-auto space-y-6">
+
+  <h1 class="text-3xl font-bold">Тренажёр: бактерии в стакане</h1>
+
+  <div class="grid md:grid-cols-2 gap-6">
+
+    <div class="bg-white p-6 rounded-2xl border">
+      <h2 class="text-xl font-semibold mb-4">Параметры</h2>
+
+      <label class="block mb-2">Начальное количество</label>
+      <input id="initial" type="number" value="1" class="w-full mb-4 p-2 border rounded">
+
+      <label class="block mb-2">Вместимость стакана</label>
+      <input id="capacity" type="number" value="1024" class="w-full mb-4 p-2 border rounded">
+
+      <label class="block mb-2">Шаг</label>
+      <div class="flex gap-2">
+        <button onclick="stepMinus()" class="px-4 py-2 bg-gray-200">-1</button>
+        <input id="step" type="number" value="0" class="w-full p-2 border rounded">
+        <button onclick="stepPlus()" class="px-4 py-2 bg-black text-white">+1</button>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl border">
+      <h2 class="text-xl font-semibold mb-4">Состояние</h2>
+
+      <div id="info" class="mb-4"></div>
+
+      <div class="w-32 h-64 border mx-auto relative bg-gray-100">
+        <div id="fill" class="absolute bottom-0 left-0 right-0 bg-black"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="bg-white p-6 rounded-2xl border">
+    <b>Ключевая идея:</b><br>
+    если на шаге N стакан наполовину заполнен → через 1 шаг он полный.
+  </div>
+
+</div>
+
+<script>
+function getValues() {
+  return {
+    initial: Number(document.getElementById('initial').value),
+    capacity: Number(document.getElementById('capacity').value),
+    step: Number(document.getElementById('step').value)
+  };
+}
+
+function calculate() {
+  const { initial, capacity, step } = getValues();
+
+  const bacteria = initial * Math.pow(2, step);
+  const percent = Math.min((bacteria / capacity) * 100, 100);
+
+  document.getElementById('info').innerHTML =
+    `Бактерий: ${bacteria}<br>Заполнение: ${percent.toFixed(2)}%`;
+
+  document.getElementById('fill').style.height = percent + '%';
+}
+
+function stepPlus() {
+  document.getElementById('step').value++;
+  calculate();
+}
+
+function stepMinus() {
+  let s = document.getElementById('step');
+  s.value = Math.max(0, s.value - 1);
+  calculate();
+}
+
+setInterval(calculate, 200);
+</script>
+
+</body>
+</html>
